@@ -2,7 +2,7 @@
 
 An interactive, mobile-first study guide for medical and pharmacology students, featuring comprehensive notes, real-time quizzes, and custom visual learning aids.
 
-[![Live Site](https://img.shields.io/badge/Live%20Site-Click%20Here-blue?style=for-the-badge&logoColor=white)](http://mustafa-shah-tech.github.io/Pharmacology_Study_Guide/) <!-- live link-->
+[![Live Site](https://img.shields.io/badge/Live%20Site-Click%20Here-blue?style=for-the-badge&logoColor=white)](https://) <!-- Insert live link here -->
 
 ## Features
 - **Mobile First & Fully Responsive:** Works flawlessly on any display size (desktop, tablet, and mobile) with an app-like hamburger menu sidebar toggle.
