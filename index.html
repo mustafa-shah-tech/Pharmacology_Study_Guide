@@ -63,14 +63,17 @@ a{color:var(--violet2);text-decoration:none}
 /* ============================================================
    LAYOUT SHELL
    ============================================================ */
-.shell{display:flex;min-height:100vh}
+.shell{display:flex;min-height:100vh;position:relative;}
 
 /* ── SIDEBAR ── */
+/* Desktop: sticky sidebar that scrolls with page */
 .sidebar{
   width:290px;flex-shrink:0;background:var(--bg2);
   border-right:1px solid var(--border);
   position:sticky;top:0;height:100vh;overflow-y:auto;
   padding:0 0 3rem;display:flex;flex-direction:column;z-index:50;
+  /* Ensure sidebar never collapses on desktop */
+  transition: transform 0.3s ease;
 }
 .sidebar::-webkit-scrollbar{width:3px}
 
@@ -126,6 +129,7 @@ a{color:var(--violet2);text-decoration:none}
 .nav-item.active .dot{background:var(--violet2);box-shadow:0 0 7px var(--violet2)}
 
 /* ── MAIN ── */
+/* Desktop: main content fills remaining width beside sidebar */
 .main{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:0 3rem 8rem}
 
 /* ============================================================
@@ -363,43 +367,86 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 /* ============================================================
    RESPONSIVE & MOBILE
    ============================================================ */
+
+/* Hamburger is HIDDEN on desktop — only visible on mobile */
 .hamburger {
   display:none; background:none; border:none; color:var(--text); cursor:pointer;
-  padding:0.4rem; margin-right: 0.6rem; border-radius: 6px; border: 1px solid transparent;
-  transition: all 0.2s; flex-shrink: 0;
+  padding:0.5rem; margin-right: 0.4rem; border-radius: 6px; border: 1px solid transparent;
+  transition: all 0.2s; flex-shrink: 0; align-items:center; justify-content:center;
 }
 .hamburger:hover { background: var(--bg3); border-color: var(--border); }
+
+/* Overlay is always hidden until activated by JS */
 .overlay {
   display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
-  z-index:45; backdrop-filter:blur(4px); opacity:0; transition:opacity 0.3s ease;
+  z-index:45; backdrop-filter:blur(4px);
 }
-.overlay.active { display:block; opacity:1; }
+.overlay.active { display:block; }
 
+/* ── TABLET (769px – 1024px) ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar { width: 240px; }
+  .main { padding: 0 2rem 8rem; }
+  .topbar { padding: 0.7rem 2rem; margin: 0 -2rem; }
+}
+
+/* ── MOBILE (max 768px) ── */
 @media (max-width: 768px) {
-  .hamburger { display:flex; align-items:center; justify-content:center; }
+  /* Show hamburger button */
+  .hamburger { display:flex; }
+
+  /* Sidebar becomes a drawer — slides in from left */
   .sidebar {
-    display:flex; position:fixed; transform:translateX(-100%); transition:transform 0.3s ease;
-    width:280px; box-shadow:2px 0 10px rgba(0,0,0,0.8); z-index: 50;
+    position:fixed;
+    top:0; left:0;
+    height:100vh;
+    width:280px;
+    transform:translateX(-100%);
+    /* transition already set on .sidebar base rule */
+    box-shadow: 4px 0 24px rgba(0,0,0,0.7);
+    z-index: 60;
+    /* Override sticky so it goes full-screen y */
+    overflow-y: auto;
   }
   .sidebar.active { transform:translateX(0); }
-  .main{padding:0 1.2rem 5rem}
-  .topbar{padding:0.7rem 1.2rem; margin:0 -1.2rem; width:calc(100% + 2.4rem);}
+
+  /* Main area takes full width — no sidebar space reserved */
+  .shell { display:block; }
+  .main  { padding:0 1.2rem 5rem; max-width:100%; }
+  .topbar{
+    padding:0.7rem 1.2rem;
+    margin:0 -1.2rem;
+    width:calc(100% + 2.4rem);
+  }
   .topbar .tb-left { font-size: 11.5px; }
-  .tb-left span.d-none-mobile { display:none; }
-  .hero{padding:3rem 0;}
-  .hero h1{font-size:2.2rem}
-  .ch-header{padding:1.5rem; margin: 3rem 0 2rem;}
-  .pbar { width: 80px; }
-  .box { padding: 1.2rem; }
+  .topbar .tb-left strong { display:none; }
+  .hero  { padding:3rem 0; }
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem); }
+  .ch-header { padding:1.5rem; margin: 3rem 0 2rem; }
+  .pbar  { width: 80px; }
+  .box   { padding: 1.2rem; }
   .mini-quiz { padding: 1.5rem 1.2rem; }
+  .tbl-wrap { font-size: 0.88rem; }
+  thead th, tbody td { padding: 0.7rem 0.8rem; }
 }
 
+/* ── SMALL MOBILE (max 480px) ── */
 @media (max-width: 480px) {
   .hero-stats { flex-direction: column; }
-  .stat-pill { width: 100%; justify-content: center; }
+  .stat-pill  { width: 100%; justify-content: center; }
   .topic-title { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-  .check-btn { margin-left: 0; width: 100%; border-radius: 8px; height: 40px; }
-  .top-btn-wrapper { width: 100%; }
+  .check-btn  { margin-left: 0; width: 100%; border-radius: 8px; height: 40px; }
+  .hero h1    { font-size: 1.8rem; }
+  .ch-header h2 { font-size: 1.5rem; }
+}
+
+/* ── EXTRA SMALL (max 360px) ── */
+@media (max-width: 360px) {
+  .main { padding: 0 0.9rem 5rem; }
+  .topbar { padding: 0.6rem 0.9rem; margin: 0 -0.9rem; width: calc(100% + 1.8rem); }
+  .hero h1 { font-size: 1.6rem; }
+  .kp-body .kp-row { flex-direction: column; gap: 0.4rem; }
+  .num { align-self: flex-start; }
 }
 </style>
 </head>
