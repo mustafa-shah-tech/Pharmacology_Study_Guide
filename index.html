@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pathology — Interactive Study Course</title>
+<title>Pharmacology — Interactive Study Course</title>
 <style>
 /* ============================================================
    FONTS
@@ -11,27 +11,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 /* ============================================================
-   DESIGN TOKENS — Clinical Dark Theme
+   DESIGN TOKENS — Pharmacy Dark Theme
    ============================================================ */
 :root {
-  --bg:         #0b0f19;
-  --bg2:        #111827;
-  --bg3:        #1f2937;
-  --panel:      #1e293b;
-  --border:     #334155;
-  --border2:    #475569;
+  --bg:         #0d0b14;
+  --bg2:        #141120;
+  --bg3:        #1f1a30;
+  --panel:      #261f3d;
+  --border:     #352c52;
+  --border2:    #4a3f6e;
 
-  --teal:       #2dd4bf; /* Clinical Teal */
-  --teal-dim:   rgba(45, 212, 191, 0.15);
+  --violet:     #8b5cf6; /* Primary Accent */
+  --violet-dim: rgba(139, 92, 246, 0.15);
+  --violet2:    #a78bfa;
   
-  --crimson:    #fb7185; /* Blood/Stain Red */
-  --crimson-dim:rgba(251, 113, 133, 0.15);
+  --emerald:    #10b981; /* Success/Bio */
+  --em-dim:     rgba(16, 185, 129, 0.15);
 
-  --blue:       #60a5fa;
-  --blue-dim:   rgba(96, 165, 250, 0.15);
+  --rose:       #f43f5e; /* Warnings */
+  --rose-dim:   rgba(244, 63, 94, 0.15);
 
-  --amber:      #fbbf24;
-  --amber-dim:  rgba(251, 191, 36, 0.15);
+  --amber:      #f59e0b; /* Notes */
+  --amber-dim:  rgba(245, 158, 11, 0.15);
 
   --text:       #e2e8f0;
   --text2:      #94a3b8;
@@ -53,10 +54,10 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;font-size:16px}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.8;overflow-x:hidden;}
-a{color:var(--teal);text-decoration:none}
+a{color:var(--violet2);text-decoration:none}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--teal);border-radius:99px}
+::-webkit-scrollbar-thumb{background:var(--violet);border-radius:99px}
 
 /* ============================================================
    LAYOUT SHELL
@@ -75,14 +76,14 @@ a{color:var(--teal);text-decoration:none}
 .sidebar-logo{
   padding:1.5rem 1.4rem 1.2rem;
   border-bottom:1px solid var(--border);
-  background:linear-gradient(180deg, var(--teal-dim), transparent);
+  background:linear-gradient(180deg, var(--violet-dim), transparent);
   flex-shrink:0;
 }
 .sidebar-logo .badge{
   font-family:var(--mono);font-size:9.5px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--teal);background:var(--teal-dim);
+  text-transform:uppercase;color:var(--violet2);background:var(--violet-dim);
   padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:0.7rem;
-  border:1px solid rgba(45, 212, 191, 0.3);
+  border:1px solid rgba(139, 92, 246, 0.3);
 }
 .sidebar-logo h1{font-family:var(--display);font-size:1.1rem;font-weight:700;color:var(--white);line-height:1.3;}
 .sidebar-logo p{font-size:11.5px;color:var(--text3);margin-top:5px;}
@@ -95,7 +96,7 @@ a{color:var(--teal);text-decoration:none}
 .progress-ring-wrap svg{flex-shrink:0}
 .ring-track{fill:none;stroke:var(--border2);stroke-width:3}
 .ring-fill{
-  fill:none;stroke:var(--teal);stroke-width:3;stroke-linecap:round;
+  fill:none;stroke:var(--emerald);stroke-width:3;stroke-linecap:round;
   stroke-dasharray:125.66;stroke-dashoffset:125.66;
   transform:rotate(-90deg);transform-origin:50% 50%;
   transition:stroke-dashoffset 0.7s ease;
@@ -118,10 +119,10 @@ a{color:var(--teal);text-decoration:none}
   transition:all 0.2s;margin-bottom:3px;
 }
 .nav-item:hover{background:var(--bg3);color:var(--white)}
-.nav-item.active{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(45, 212, 191, 0.2);}
+.nav-item.active{background:var(--violet-dim);color:var(--violet2);border:1px solid rgba(139, 92, 246, 0.2);}
 .nav-item .dot{width:7px;height:7px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:all 0.2s;}
-.nav-item.done .dot{background:var(--blue)}
-.nav-item.active .dot{background:var(--teal);box-shadow:0 0 7px var(--teal)}
+.nav-item.done .dot{background:var(--emerald)}
+.nav-item.active .dot{background:var(--violet2);box-shadow:0 0 7px var(--violet2)}
 
 /* ── MAIN ── */
 .main{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:0 3rem 8rem}
@@ -131,7 +132,7 @@ a{color:var(--teal);text-decoration:none}
    ============================================================ */
 .topbar{
   position:sticky;top:0;
-  background:rgba(11,15,25,0.92);backdrop-filter:blur(14px);
+  background:rgba(13,11,20,0.92);backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);z-index:40;
   padding:0.7rem 3rem;display:flex;align-items:center;
   justify-content:space-between;font-size:12px;font-weight:500;
@@ -141,7 +142,7 @@ a{color:var(--teal);text-decoration:none}
 .topbar .tb-left strong{color:var(--text2)}
 .topbar .tb-right{display:flex;align-items:center;gap:0.8rem;color:var(--text3)}
 .pbar{height:4px;background:var(--border);width:120px;border-radius:99px;overflow:hidden;}
-.pbar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:99px;width:0%;transition:width 0.4s ease;}
+.pbar-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--emerald));border-radius:99px;width:0%;transition:width 0.4s ease;}
 
 /* ============================================================
    HERO
@@ -151,21 +152,21 @@ a{color:var(--teal);text-decoration:none}
 }
 .hero::before{
   content:'';position:absolute;top:0;left:-3rem;right:-3rem;height:3px;
-  background:linear-gradient(90deg,transparent,var(--crimson),var(--teal),var(--blue),transparent);
+  background:linear-gradient(90deg,transparent,var(--violet),var(--emerald),var(--violet2),transparent);
 }
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:0.6rem;
   font-family:var(--mono);font-size:11px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--teal);margin-bottom:1.2rem;
+  text-transform:uppercase;color:var(--violet2);margin-bottom:1.2rem;
 }
-.hero-eyebrow span{width:25px;height:1px;background:var(--teal);display:block;}
+.hero-eyebrow span{width:25px;height:1px;background:var(--violet2);display:block;}
 .hero h1{
-  font-family:var(--display);font-size:clamp(2.5rem,5vw,4rem);
+  font-family:var(--display);font-size:clamp(2.5rem,5vw,3.8rem);
   font-weight:700;line-height:1.1;color:var(--white);
   margin-bottom:1.2rem;letter-spacing:-0.5px;
 }
 .hero h1 .accent{
-  background:linear-gradient(90deg,var(--teal),var(--blue));
+  background:linear-gradient(90deg,var(--violet2),var(--emerald));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .hero-desc{font-size:1.15rem;color:var(--text2);max-width:650px;margin-bottom:2.5rem;line-height:1.7;}
@@ -188,12 +189,12 @@ a{color:var(--teal);text-decoration:none}
 }
 .ch-header::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,var(--teal-dim),transparent 60%);
+  background:linear-gradient(135deg,var(--violet-dim),transparent 60%);
   pointer-events:none;
 }
 .ch-header .ch-num{
   font-family:var(--mono);font-size:11px;letter-spacing:2.5px;
-  text-transform:uppercase;color:var(--teal);margin-bottom:0.8rem;
+  text-transform:uppercase;color:var(--violet2);margin-bottom:0.8rem;
 }
 .ch-header h2{
   font-family:var(--display);font-size:2rem;font-weight:700;
@@ -212,12 +213,12 @@ a{color:var(--teal);text-decoration:none}
 .topic-title{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
 .topic-title h3{font-family:var(--display);font-size:1.4rem;font-weight:600;color:var(--white);}
 .marker{
-  width:38px;height:38px;border-radius:10px;background:var(--teal-dim);
-  border:1px solid rgba(45, 212, 191, 0.4);display:flex;align-items:center;
+  width:38px;height:38px;border-radius:10px;background:var(--violet-dim);
+  border:1px solid rgba(139, 92, 246, 0.4);display:flex;align-items:center;
   justify-content:center;font-size:16px;flex-shrink:0;
 }
-.marker.crimson { background:var(--crimson-dim); border-color:rgba(251, 113, 133, 0.4); }
-.marker.blue { background:var(--blue-dim); border-color:rgba(96, 165, 250, 0.4); }
+.marker.emerald { background:var(--em-dim); border-color:rgba(16, 185, 129, 0.4); }
+.marker.amber { background:var(--amber-dim); border-color:rgba(245, 158, 11, 0.4); }
 
 .check-btn{
   margin-left:auto;width:30px;height:30px;border-radius:50%;
@@ -225,8 +226,8 @@ a{color:var(--teal);text-decoration:none}
   display:flex;align-items:center;justify-content:center;font-size:14px;
   transition:all 0.2s;flex-shrink:0;color:transparent;
 }
-.check-btn:hover{border-color:var(--teal);background:var(--teal-dim)}
-.check-btn.checked{border-color:var(--teal);background:var(--teal);color:var(--bg)}
+.check-btn:hover{border-color:var(--emerald);background:var(--em-dim)}
+.check-btn.checked{border-color:var(--emerald);background:var(--emerald);color:var(--bg)}
 
 p{margin-bottom:1.2rem;color:var(--text);font-size:1.05rem}
 
@@ -238,12 +239,12 @@ p{margin-bottom:1.2rem;color:var(--text);font-size:1.05rem}
 .box p{margin:0 0 0.5rem;font-size:0.95rem;line-height:1.6;}
 .box p:last-child{margin-bottom:0}
 
-.box.def{border-color:var(--teal)}
-.box.def .box-label{color:var(--teal)}
-.box.eg{border-color:var(--blue)}
-.box.eg .box-label{color:var(--blue)}
-.box.exam{border-color:var(--crimson); background:var(--crimson-dim);}
-.box.exam .box-label{color:var(--crimson)}
+.box.def{border-color:var(--violet2)}
+.box.def .box-label{color:var(--violet2)}
+.box.eg{border-color:var(--emerald)}
+.box.eg .box-label{color:var(--emerald)}
+.box.exam{border-color:var(--rose); background:var(--rose-dim);}
+.box.exam .box-label{color:var(--rose)}
 .box.note{border-color:var(--amber)}
 .box.note .box-label{color:var(--amber)}
 
@@ -267,8 +268,8 @@ p{margin-bottom:1.2rem;color:var(--text);font-size:1.05rem}
 }
 .kp-body .kp-row:last-child{border-bottom:none}
 .kp-body .kp-row .num{
-  font-family:var(--mono);font-size:11px;color:var(--teal);
-  background:var(--teal-dim);padding:3px 8px;border-radius:4px;flex-shrink:0;margin-top:2px;
+  font-family:var(--mono);font-size:11px;color:var(--violet2);
+  background:var(--violet-dim);padding:3px 8px;border-radius:4px;flex-shrink:0;margin-top:2px;
 }
 .kp-body .kp-row .txt{color:var(--text);line-height:1.6;}
 .kp-body .kp-row .txt strong{color:var(--white);font-weight:600;}
@@ -302,7 +303,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 }
 .bl li:last-child{border-bottom:none}
 .bl li::before{
-  content:'■';color:var(--teal);font-size:9px;
+  content:'■';color:var(--violet2);font-size:9px;
   position:absolute;left:2px;top:0.8rem;
 }
 
@@ -316,7 +317,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 }
 .mini-quiz::before{
   content:'';position:absolute;top:0;left:0;right:0;height:4px;
-  background:linear-gradient(90deg,var(--teal),var(--blue),var(--teal));
+  background:linear-gradient(90deg,var(--violet2),var(--emerald),var(--violet2));
 }
 .mini-quiz h4{
   font-family:var(--display);font-size:1.2rem;color:var(--white);
@@ -332,17 +333,17 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
   font-size:0.95rem;color:var(--text);font-family:inherit;
   cursor:pointer;text-align:left;transition:all 0.2s;
 }
-.opt:hover:not(:disabled){border-color:var(--teal);background:var(--teal-dim);}
-.opt.correct{border-color:var(--teal)!important;background:var(--teal-dim)!important;color:var(--teal)!important;}
-.opt.wrong{border-color:var(--crimson)!important;background:var(--crimson-dim)!important;color:var(--crimson)!important;}
+.opt:hover:not(:disabled){border-color:var(--violet2);background:var(--violet-dim);}
+.opt.correct{border-color:var(--emerald)!important;background:var(--em-dim)!important;color:var(--emerald)!important;}
+.opt.wrong{border-color:var(--rose)!important;background:var(--rose-dim)!important;color:var(--rose)!important;}
 .opt:disabled{cursor:default;}
 .q-feedback{
   font-size:0.9rem;margin-top:0.8rem;
   padding:0.8rem 1rem;border-radius:8px;display:none;font-weight:500;
 }
 .q-feedback.show{display:block;}
-.q-feedback.ok{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(45, 212, 191, 0.2);}
-.q-feedback.fail{background:var(--crimson-dim);color:var(--crimson);border:1px solid rgba(251, 113, 133, 0.2);}
+.q-feedback.ok{background:var(--em-dim);color:var(--emerald);border:1px solid rgba(16, 185, 129, 0.2);}
+.q-feedback.fail{background:var(--rose-dim);color:var(--rose);border:1px solid rgba(244, 63, 94, 0.2);}
 
 /* ============================================================
    RESPONSIVE
@@ -363,9 +364,9 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <div class="badge">MED-PATH 201</div>
-    <h1>Pathology</h1>
-    <p>Term 2 · Theory & Practical Guide</p>
+    <div class="badge">HIMS · PHARM-101</div>
+    <h1>Pharmacology</h1>
+    <p>Hafeez Institute of Medical Sciences</p>
   </div>
 
   <div class="progress-ring-wrap">
@@ -381,29 +382,27 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 
   <div class="nav-section">
-    <div class="nav-section-label">1. Fundamentals</div>
-    <div class="nav-item" data-target="t1-1"><div class="dot"></div>Intro & Core Pathology</div>
+    <div class="nav-section-label">1. General & PK/PD</div>
+    <div class="nav-item" data-target="t1-1"><div class="dot"></div>Intro & Sources</div>
+    <div class="nav-item" data-target="t1-2"><div class="dot"></div>Pharmacokinetics</div>
+    <div class="nav-item" data-target="t1-3"><div class="dot"></div>Pharmacodynamics</div>
   </div>
   <div class="nav-section">
-    <div class="nav-section-label">2. Cellular Responses</div>
-    <div class="nav-item" data-target="t2-1"><div class="dot"></div>Cellular Adaptations</div>
-    <div class="nav-item" data-target="t2-2"><div class="dot"></div>Necrosis & Gangrene</div>
+    <div class="nav-section-label">2. Safety & Adverse</div>
+    <div class="nav-item" data-target="t2-1"><div class="dot"></div>Adverse Reactions</div>
+    <div class="nav-item" data-target="t2-2"><div class="dot"></div>Tolerance & Dependence</div>
   </div>
   <div class="nav-section">
-    <div class="nav-section-label">3. Inflammation & Repair</div>
-    <div class="nav-item" data-target="t3-1"><div class="dot"></div>Acute & Chronic Inflam.</div>
-    <div class="nav-item" data-target="t3-2"><div class="dot"></div>Wound Healing</div>
-  </div>
-  <div class="nav-section">
-    <div class="nav-section-label">4. Hemodynamics</div>
-    <div class="nav-item" data-target="t4-1"><div class="dot"></div>Edema & Embolism</div>
+    <div class="nav-section-label">3. Systemic & Applied</div>
+    <div class="nav-item" data-target="t3-1"><div class="dot"></div>CNS & ANS Drugs</div>
+    <div class="nav-item" data-target="t3-2"><div class="dot"></div>Anti-Microbial & Specific</div>
   </div>
 </aside>
 
 <div class="main">
 
   <div class="topbar">
-    <div class="tb-left">🔬 <strong>Pathology</strong> — Interactive Study Guide</div>
+    <div class="tb-left">💊 <strong>Course Title: Pharmacology</strong></div>
     <div class="tb-right">
       <span id="topPct">0%</span>
       <div class="pbar"><div class="pbar-fill" id="topBar"></div></div>
@@ -411,56 +410,115 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 
   <header class="hero">
-    <div class="hero-eyebrow"><span></span>Based on Term 2 Syllabus<span></span></div>
-    <h1>The Foundation of <br><span class="accent">Medical Disease</span></h1>
-    <p class="hero-desc">Master the structural and functional changes in cells, tissues, and organs that underlie disease. This guide covers the core concepts, from cellular injury to hemodynamics, designed for 2nd Term Pathology students.</p>
+    <div class="hero-eyebrow"><span></span>Official Syllabus Guide<span></span></div>
+    <h1>The Science of <br><span class="accent">Drugs & Healing</span></h1>
+    <p class="hero-desc">Master foundational drug concepts, from how the body processes medications to specific clinical applications and systemic pharmacology. Designed for medical technicians based on the Hafeez Institute curriculum.</p>
     <div class="hero-stats">
-      <div class="stat-pill">📘 <strong>4</strong>&nbsp;Core Chapters</div>
-      <div class="stat-pill">📝 <strong>6</strong>&nbsp;Study Topics</div>
+      <div class="stat-pill">📘 <strong>3</strong>&nbsp;Core Chapters</div>
+      <div class="stat-pill">📝 <strong>7</strong>&nbsp;Study Topics</div>
       <div class="stat-pill">🧪 <strong>Self-Assessment</strong>&nbsp;Quizzes</div>
-      <div class="stat-pill">⏱️ <strong>80+40</strong>&nbsp;Course Hrs Equivalent</div>
+      <div class="stat-pill">⚕️ <strong>HIMS</strong>&nbsp;Curriculum</div>
     </div>
   </header>
 
   <div class="ch-header">
-    <div class="ch-num">Chapter 1 of 4</div>
-    <h2>Fundamentals of Pathology</h2>
-    <p class="ch-desc">Pathology is the scientific study of disease. Learn the terminology and the four core aspects that define the disease process.</p>
+    <div class="ch-num">Chapter 1 of 3</div>
+    <h2>General Pharmacology & Pharmacokinetics</h2>
+    <p class="ch-desc">Understand the fundamental definitions, how drugs move through the body (ADME), and how they exert their therapeutic effects.</p>
   </div>
 
   <section class="topic" id="t1-1">
     <div class="topic-title">
-      <div class="marker">🔬</div>
-      <h3>Topic 1.1: Introduction & The Core of Pathology</h3>
+      <div class="marker">💊</div>
+      <h3>Topic 1.1: Definitions & Sources</h3>
       <button class="check-btn" onclick="toggleDone(this,'t1-1')">✓</button>
     </div>
 
-    <p>Pathology (from Greek *pathos* = suffering, and *logos* = study) bridges clinical practice and basic science. It involves the investigation of the causes, mechanisms, and effects of disease.</p>
+    <p>Pharmacology is the study of substances that interact with living systems through chemical processes. A <strong>drug</strong> is any chemical agent that affects living processes.</p>
 
     <div class="kp-box">
-      <div class="kp-head">The Four Core Aspects of Pathology</div>
+      <div class="kp-head">Sources of Drugs</div>
       <div class="kp-body">
-        <div class="kp-row"><span class="num">1</span><span class="txt"><strong>Etiology (Cause):</strong> Why a disease arises. Can be genetic (e.g., mutations) or acquired (e.g., infectious, nutritional, chemical).</span></div>
-        <div class="kp-row"><span class="num">2</span><span class="txt"><strong>Pathogenesis (Mechanism):</strong> The sequence of events from the initial stimulus to the ultimate expression of the disease. *How* the disease develops.</span></div>
-        <div class="kp-row"><span class="num">3</span><span class="txt"><strong>Morphologic Changes:</strong> The structural alterations in cells or tissues that are characteristic of the disease or diagnostic of the etiologic process.</span></div>
-        <div class="kp-row"><span class="num">4</span><span class="txt"><strong>Clinical Significance:</strong> The functional consequences of morphologic changes. This leads to the clinical manifestations (signs and symptoms) observed in the patient.</span></div>
+        <div class="kp-row"><span class="num">1</span><span class="txt"><strong>Plant Sources:</strong> Alkaloids (e.g., morphine from opium, atropine from belladonna), glycosides (e.g., digoxin).</span></div>
+        <div class="kp-row"><span class="num">2</span><span class="txt"><strong>Animal Sources:</strong> Hormones (e.g., insulin originally from pigs/cows), enzymes.</span></div>
+        <div class="kp-row"><span class="num">3</span><span class="txt"><strong>Mineral Sources:</strong> Iron (for anemia), Iodine, Lithium (for bipolar disorder).</span></div>
+        <div class="kp-row"><span class="num">4</span><span class="txt"><strong>Synthetic/Semi-synthetic:</strong> Created in labs to improve efficacy and reduce side effects (e.g., aspirin, most modern antibiotics).</span></div>
+        <div class="kp-row"><span class="num">5</span><span class="txt"><strong>Microbiological:</strong> Antibiotics derived from fungi and bacteria (e.g., Penicillin from <em>Penicillium</em> fungus).</span></div>
       </div>
     </div>
+  </section>
+
+  <section class="topic" id="t1-2">
+    <div class="topic-title">
+      <div class="marker emerald">🔄</div>
+      <h3>Topic 1.2: Pharmacokinetics (Absorption, Distribution, Elimination)</h3>
+      <button class="check-btn" onclick="toggleDone(this,'t1-2')">✓</button>
+    </div>
+
+    <p><strong>Pharmacokinetics (PK)</strong> is often defined as <em>"what the body does to the drug."</em> It involves four main phases, commonly remembered by the acronym <strong>ADME</strong>: Absorption, Distribution, Metabolism, and Excretion/Elimination.</p>
+
+    <ul class="bl">
+      <li><strong>Absorption:</strong> The movement of a drug from its site of administration into the bloodstream. <em>Factors affecting absorption</em> include route of administration, blood flow, surface area, and lipid solubility.</li>
+      <li><strong>Distribution:</strong> The reversible transfer of a drug from the bloodstream to the tissues and organs.</li>
+      <li><strong>Elimination (Metabolism & Excretion):</strong> The processes by which a drug is permanently removed from the body. Metabolism usually occurs in the <strong>liver</strong>, while excretion primarily occurs via the <strong>kidneys</strong> (urine).</li>
+    </ul>
 
     <div class="box def">
-      <div class="box-label">📖 Terminology: Cytology vs. Biopsy</div>
-      <p><strong>Cytology:</strong> The examination of individual cells or clusters of cells (e.g., Pap smear) to detect abnormalities. <br>
-      <strong>Biopsy:</strong> The removal and examination of a small piece of living tissue for diagnostic purposes.</p>
+      <div class="box-label">📖 Definition: Bioavailability</div>
+      <p><strong>Bioavailability</strong> is the fraction (or percentage) of an administered drug that reaches the systemic circulation completely unchanged. An intravenous (IV) injection has 100% bioavailability, while an oral drug will have less than 100% due to incomplete absorption and first-pass metabolism in the liver.</p>
+    </div>
+  </section>
+
+  <section class="topic" id="t1-3">
+    <div class="topic-title">
+      <div class="marker amber">🎯</div>
+      <h3>Topic 1.3: Pharmacodynamics</h3>
+      <button class="check-btn" onclick="toggleDone(this,'t1-3')">✓</button>
+    </div>
+
+    <p><strong>Pharmacodynamics (PD)</strong> is defined as <em>"what the drug does to the body."</em> It involves the biochemical and physiological effects of drugs and their mechanisms of action.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Concept</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Receptors</strong></td>
+            <td>Specialized target macromolecules (usually proteins) on or inside cells that bind to a drug to mediate its effect.</td>
+          </tr>
+          <tr>
+            <td><strong>Agonist</strong></td>
+            <td>A drug that binds to a receptor and <em>activates</em> it, producing a biological response.</td>
+          </tr>
+          <tr>
+            <td><strong>Antagonist</strong></td>
+            <td>A drug that binds to a receptor and <em>blocks</em> or prevents the action of an agonist (often called a "blocker").</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="mini-quiz">
-      <h4>🧪 Topic 1.1 — Checkpoint Quiz</h4>
+      <h4>🧪 Chapter 1 — Checkpoint Quiz</h4>
       <div class="quiz-q">
-        <div class="q-text">1. Which core aspect of pathology refers to the *sequence of events* that occur after the initial injury?</div>
+        <div class="q-text">1. Which term specifically describes the fraction of an administered drug that successfully reaches the systemic circulation unchanged?</div>
         <div class="options">
-          <button class="opt" onclick="checkAnswer(this, false, 'Etiology refers to the underlying cause (the \'why\').')">A. Etiology</button>
-          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Pathogenesis describes the step-by-step mechanism of disease development.')">B. Pathogenesis</button>
-          <button class="opt" onclick="checkAnswer(this, false, 'Morphology refers to structural changes, not the mechanism.')">C. Morphologic changes</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Pharmacodynamics refers to what the drug does to the body.')">A. Pharmacodynamics</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Bioavailability is 100% for IV drugs but lower for oral drugs.')">B. Bioavailability</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Distribution is how the drug moves to tissues *after* reaching the bloodstream.')">C. Distribution</button>
+        </div>
+        <div class="q-feedback"></div>
+      </div>
+      <div class="quiz-q">
+        <div class="q-text">2. Which concept is summarized as "what the drug does to the body"?</div>
+        <div class="options">
+          <button class="opt" onclick="checkAnswer(this, false, 'Pharmacokinetics is what the *body* does to the *drug* (ADME).')">A. Pharmacokinetics</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Pharmacodynamics studies the drug\'s mechanism of action and effects.')">B. Pharmacodynamics</button>
         </div>
         <div class="q-feedback"></div>
       </div>
@@ -468,80 +526,60 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
   </section>
 
   <div class="ch-header">
-    <div class="ch-num">Chapter 2 of 4</div>
-    <h2>Cell Injury & Cellular Responses</h2>
-    <p class="ch-desc">How cells adapt to stress, what happens when they fail to adapt (injury), and the ultimate outcome of irreversible injury (necrosis and gangrene).</p>
+    <div class="ch-num">Chapter 2 of 3</div>
+    <h2>Adverse Reactions & Clinical Safety</h2>
+    <p class="ch-desc">Distinguish between different types of negative drug effects, and understand the mechanisms of tolerance, dependence, and addiction.</p>
   </div>
 
   <section class="topic" id="t2-1">
     <div class="topic-title">
-      <div class="marker blue">🧬</div>
-      <h3>Topic 2.1: Cellular Adaptations</h3>
+      <div class="marker">⚠️</div>
+      <h3>Topic 2.1: Adverse Reactions</h3>
       <button class="check-btn" onclick="toggleDone(this,'t2-1')">✓</button>
     </div>
 
-    <p>Cells constantly adjust their structure and function to accommodate changing demands. These reversible changes are called **cellular adaptations**.</p>
+    <p>No drug is completely safe. Understanding the differences between various negative reactions is crucial for clinical safety.</p>
 
-    <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Adaptation Type</th>
-            <th>Definition</th>
-            <th>Clinical Example</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Hyperplasia</strong></td>
-            <td>Increase in the <em>number</em> of cells in an organ or tissue.</td>
-            <td>Thickening of skin due to chronic friction (callus); hormonal breast growth.</td>
-          </tr>
-          <tr>
-            <td><strong>Hypertrophy</strong></td>
-            <td>Increase in the <em>size</em> of individual cells, resulting in increased organ size.</td>
-            <td>Skeletal muscle enlargement in bodybuilders; left ventricular hypertrophy in hypertension.</td>
-          </tr>
-          <tr>
-            <td><strong>Atrophy</strong></td>
-            <td>Decrease in cell size and organ size due to loss of cell substance.</td>
-            <td>Muscle wasting due to a broken limb in a cast (disuse atrophy).</td>
-          </tr>
-          <tr>
-            <td><strong>Metaplasia</strong></td>
-            <td>Reversible replacement of one adult cell type by another adult cell type better able to withstand stress.</td>
-            <td>Squamous metaplasia in the respiratory tract of chronic smokers.</td>
-          </tr>
-        </tbody>
-      </table>
+    <ul class="bl">
+      <li><strong>Over-dosage (Toxicity):</strong> Exaggerated effects that occur when a drug is administered in higher quantities than the therapeutic dose.</li>
+      <li><strong>Hypersensitivity (Drug Allergy):</strong> An abnormal, unpredictable immune system response to a drug (e.g., anaphylaxis to penicillin). It is not dose-dependent.</li>
+      <li><strong>Idiosyncrasy:</strong> An abnormal, genetically determined reactivity to a chemical. It is a rare, unpredictable response specific to an individual's genetic makeup.</li>
+      <li><strong>Secondary Effects:</strong> Indirect consequences of a drug's primary action (e.g., diarrhea caused by antibiotics killing normal gut flora).</li>
+    </ul>
+
+    <div class="box exam">
+      <div class="box-label">🔴 Exam Alert — Hypersensitivity vs. Idiosyncrasy</div>
+      <p>Do not confuse these two! <strong>Hypersensitivity</strong> is driven by the <em>immune system</em> (antibodies). <strong>Idiosyncrasy</strong> is driven by an individual's unique <em>genetic enzymes</em> (e.g., lacking a specific enzyme to process a drug).</p>
     </div>
   </section>
 
   <section class="topic" id="t2-2">
     <div class="topic-title">
-      <div class="marker crimson">☠️</div>
-      <h3>Topic 2.2: Necrosis & Gangrene</h3>
+      <div class="marker emerald">🧠</div>
+      <h3>Topic 2.2: Tolerance, Dependence & Addiction</h3>
       <button class="check-btn" onclick="toggleDone(this,'t2-2')">✓</button>
     </div>
 
-    <p>If the stress is too severe, cells suffer irreversible injury leading to cell death. <strong>Necrosis</strong> is the pathological form of cell death characterized by severe membrane damage, lysosomal enzyme leakage, and local inflammation.</p>
+    <p>Repeated exposure to certain drugs can alter biological responses, leading to conditions that require careful clinical management.</p>
 
-    <div class="box exam">
-      <div class="box-label">🔴 Exam Alert — Gangrene Types</div>
-      <p><strong>Gangrene</strong> is not a specific pattern of cell death, but a clinical term often applied to a limb that has lost its blood supply and undergone necrosis.<br><br>
-      • <strong>Dry Gangrene:</strong> Coagulative necrosis due to ischemia (e.g., frostbite). Tissue is dry, black, and shriveled.<br>
-      • <strong>Wet Gangrene:</strong> Occurs when bacterial infection supervenes on necrotic tissue. Liquefactive necrosis makes it swollen, foul-smelling, and moist.<br>
-      • <strong>Gas Gangrene:</strong> Caused by *Clostridium perfringens* bacteria emitting gas into the tissues.</p>
+    <div class="kp-box">
+      <div class="kp-head">Distinguishing the Concepts</div>
+      <div class="kp-body">
+        <div class="kp-row"><span class="num">1</span><span class="txt"><strong>Drug Tolerance:</strong> A decreased responsiveness to a drug following repeated administration. The patient requires <em>higher doses</em> to achieve the same therapeutic effect.</span></div>
+        <div class="kp-row"><span class="num">2</span><span class="txt"><strong>Dependence:</strong> An altered physiological state resulting from continuous drug use. If the drug is abruptly stopped, the patient experiences severe physical <strong>withdrawal symptoms</strong>.</span></div>
+        <div class="kp-row"><span class="num">3</span><span class="txt"><strong>Habituation:</strong> A psychological desire to continue taking a drug for the feeling of well-being it provides, but without physical withdrawal symptoms if stopped.</span></div>
+        <div class="kp-row"><span class="num">4</span><span class="txt"><strong>Addiction:</strong> A severe pattern of compulsive drug-seeking behavior and use, despite harmful consequences. It involves overwhelming psychological craving and often physical dependence.</span></div>
+      </div>
     </div>
 
     <div class="mini-quiz">
-      <h4>🧪 Topic 2 — Checkpoint Quiz</h4>
+      <h4>🧪 Chapter 2 — Checkpoint Quiz</h4>
       <div class="quiz-q">
-        <div class="q-text">1. A chronic smoker's respiratory tract undergoes a change where normal columnar ciliated epithelium is replaced by stratified squamous epithelium. What is this process called?</div>
+        <div class="q-text">1. A patient requires increasingly larger doses of a pain medication to achieve the same level of pain relief. What is this phenomenon called?</div>
         <div class="options">
-          <button class="opt" onclick="checkAnswer(this, false, 'Hyperplasia is an increase in the number of cells, not a change in cell type.')">A. Hyperplasia</button>
-          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Metaplasia is the reversible change of one adult cell type to another.')">B. Metaplasia</button>
-          <button class="opt" onclick="checkAnswer(this, false, 'Hypertrophy is an increase in cell size.')">C. Hypertrophy</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Tolerance means the body has adapted and needs more of the drug for the same effect.')">A. Drug Tolerance</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Addiction is a behavioral pattern of compulsive use, not specifically the need for higher doses.')">B. Addiction</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Idiosyncrasy is a rare, genetic abnormal reaction.')">C. Idiosyncrasy</button>
         </div>
         <div class="q-feedback"></div>
       </div>
@@ -549,114 +587,93 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
   </section>
 
   <div class="ch-header">
-    <div class="ch-num">Chapter 3 of 4</div>
-    <h2>Inflammation & Repair</h2>
-    <p class="ch-desc">The body's protective response to eliminate the initial cause of injury and the subsequent process of tissue healing.</p>
+    <div class="ch-num">Chapter 3 of 3</div>
+    <h2>Systemic & Applied Pharmacology</h2>
+    <p class="ch-desc">Study specific classes of drugs targeting the nervous system, microbial infections, and specialized clinical scenarios.</p>
   </div>
 
   <section class="topic" id="t3-1">
     <div class="topic-title">
-      <div class="marker crimson">🔥</div>
-      <h3>Topic 3.1: Acute vs. Chronic Inflammation</h3>
+      <div class="marker violet">⚡</div>
+      <h3>Topic 3.1: CNS & ANS Drugs</h3>
       <button class="check-btn" onclick="toggleDone(this,'t3-1')">✓</button>
     </div>
 
-    <p><strong>Inflammation</strong> is a vital response of vascularized tissues that delivers leukocytes and molecules of host defense from the circulation to the sites of infection and cell damage.</p>
+    <p><strong>CNS Drugs (Central Nervous System):</strong> These medications act on the brain and spinal cord to treat neurological and psychiatric conditions.</p>
+    <ul class="bl">
+      <li><strong>Anti-epileptics:</strong> Drugs used to control or prevent seizures (e.g., Phenytoin, Valproic acid).</li>
+      <li><strong>Anti-depressants:</strong> Used to treat clinical depression by altering brain neurotransmitters (e.g., SSRIs).</li>
+      <li><strong>Anti-psychotics:</strong> Used to manage psychosis, particularly in schizophrenia.</li>
+      <li><strong>Sedatives:</strong> Drugs that depress the CNS to calm a patient, reduce anxiety, or induce sleep.</li>
+    </ul>
 
-    <div class="kp-box">
-      <div class="kp-head">Comparison: Acute vs. Chronic</div>
-      <div class="kp-body">
-        <div class="kp-row"><span class="num">Duration</span><span class="txt"><strong>Acute:</strong> Fast (minutes to days). <br><strong>Chronic:</strong> Slow (days to years).</span></div>
-        <div class="kp-row"><span class="num">Cellular Infiltrate</span><span class="txt"><strong>Acute:</strong> Mainly Neutrophils. <br><strong>Chronic:</strong> Monocytes/Macrophages and Lymphocytes.</span></div>
-        <div class="kp-row"><span class="num">Tissue Injury</span><span class="txt"><strong>Acute:</strong> Usually mild and self-limited. <br><strong>Chronic:</strong> Often severe and progressive.</span></div>
-        <div class="kp-row"><span class="num">Local/Systemic Signs</span><span class="txt"><strong>Acute:</strong> Prominent clinical signs (Heat, Redness, Swelling, Pain, Loss of function). <br><strong>Chronic:</strong> Less prominent.</span></div>
-      </div>
+    <p><strong>ANS Drugs (Autonomic Nervous System):</strong> These drugs affect the involuntary nervous system (heart rate, digestion, pupil dilation).</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Drug Class</th>
+            <th>System Targeted</th>
+            <th>General Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Adrenergic Agents</strong></td>
+            <td>Sympathetic System</td>
+            <td>Mimic "Fight or Flight" (e.g., increase heart rate, dilate airways). Includes epinephrine/adrenaline.</td>
+          </tr>
+          <tr>
+            <td><strong>Anti-cholinergic Agents</strong></td>
+            <td>Parasympathetic System</td>
+            <td>Block the "Rest and Digest" system (e.g., reduce secretions, increase heart rate). Includes atropine.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
   <section class="topic" id="t3-2">
     <div class="topic-title">
-      <div class="marker teal">🩹</div>
-      <h3>Topic 3.2: Healing by First vs. Second Intention</h3>
+      <div class="marker emerald">🦠</div>
+      <h3>Topic 3.2: Anti-Microbial & Specific Agents</h3>
       <button class="check-btn" onclick="toggleDone(this,'t3-2')">✓</button>
     </div>
 
-    <p>Repair restores tissue architecture and function. It occurs via two main pathways depending on the severity of the wound.</p>
-
-    <ul class="bl">
-      <li><strong>Healing by First Intention (Primary Union):</strong> Occurs in clean, uninfected surgical incisions approximated by sutures. There is minimal tissue loss, rapid epithelialization, and very little scar formation.</li>
-      <li><strong>Healing by Second Intention (Secondary Union):</strong> Occurs in large wounds with extensive tissue loss (e.g., ulcers, abscesses). The edges cannot be brought together. Healing involves intense inflammation, abundant granulation tissue formation, wound contraction, and substantial scarring.</li>
-    </ul>
-
-    <div class="box note">
-      <div class="box-label">💡 Factors Affecting Wound Healing</div>
-      <p>Healing can be impaired by <strong>Local factors</strong> (infection, foreign bodies, poor blood supply to the area) or <strong>Systemic factors</strong> (diabetes, poor nutrition/Vitamin C deficiency, immunosuppression, age).</p>
+    <p><strong>Anti-Microbial Drugs:</strong> These agents work by exploiting the differences between the host (human) cells and the invading pathogens.</p>
+    
+    <div class="kp-box">
+      <div class="kp-head">Classification & Targets</div>
+      <div class="kp-body">
+        <div class="kp-row"><span class="num">1</span><span class="txt"><strong>Anti-bacterial:</strong> Target bacterial cell walls, protein synthesis, or DNA (e.g., Penicillins, Tetracyclines).</span></div>
+        <div class="kp-row"><span class="num">2</span><span class="txt"><strong>Anti-fungal:</strong> Target fungal cell membranes (e.g., Fluconazole).</span></div>
+        <div class="kp-row"><span class="num">3</span><span class="txt"><strong>Anti-viral:</strong> Inhibit viral replication inside host cells (e.g., Acyclovir).</span></div>
+        <div class="kp-row"><span class="num">4</span><span class="txt"><strong>Anti-malarial:</strong> Eradicate the Plasmodium parasite in the blood or liver (e.g., Chloroquine).</span></div>
+      </div>
     </div>
 
+    <p><strong>Specific Agents:</strong></p>
+    <ul class="bl">
+      <li><strong>Anti-tubercular agents:</strong> Specialized, long-term antibiotic regimens (like Isoniazid and Rifampin) designed specifically to treat the tough *Mycobacterium tuberculosis* bacteria.</li>
+      <li><strong>Antiseptics:</strong> Chemical agents applied to <em>living tissues</em> (like skin) to destroy or inhibit microbes (e.g., alcohol prep pads, iodine).</li>
+      <li><strong>Disinfectants:</strong> Harsher chemical agents applied to <em>non-living objects/surfaces</em> to destroy microorganisms. Not safe for living tissue.</li>
+    </ul>
+
     <div class="mini-quiz">
-      <h4>🧪 Topic 3 — Checkpoint Quiz</h4>
+      <h4>🧪 Chapter 3 — Final Checkpoint Quiz</h4>
       <div class="quiz-q">
-        <div class="q-text">1. Which primary cell type is the hallmark of Acute Inflammation?</div>
+        <div class="q-text">1. What is the key difference between an antiseptic and a disinfectant?</div>
         <div class="options">
-          <button class="opt" onclick="checkAnswer(this, false, 'Macrophages are characteristic of chronic inflammation.')">A. Macrophages</button>
-          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Neutrophils are the first responders in acute inflammation.')">B. Neutrophils</button>
-          <button class="opt" onclick="checkAnswer(this, false, 'Lymphocytes are associated with chronic inflammation and specific immunity.')">C. Lymphocytes</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Antiseptics are mild enough for skin; disinfectants are strictly for surfaces.')">A. Antiseptics are applied to living tissue; disinfectants are applied to non-living surfaces.</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Incorrect. Disinfectants are actually harsher and destroy microbes on objects.')">B. Antiseptics destroy all bacteria, while disinfectants only paralyze them.</button>
         </div>
         <div class="q-feedback"></div>
       </div>
-    </div>
-  </section>
-
-  <div class="ch-header">
-    <div class="ch-num">Chapter 4 of 4</div>
-    <h2>Hemodynamic Disorders</h2>
-    <p class="ch-desc">Disorders involving disruptions to normal blood flow, fluid balance, and blood coagulation.</p>
-  </div>
-
-  <section class="topic" id="t4-1">
-    <div class="topic-title">
-      <div class="marker blue">🩸</div>
-      <h3>Topic 4.1: Edema, Thrombosis & Embolism</h3>
-      <button class="check-btn" onclick="toggleDone(this,'t4-1')">✓</button>
-    </div>
-
-    <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Condition</th>
-            <th>Pathological Definition</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Edema</strong></td>
-            <td>The accumulation of abnormal amounts of fluid in the interstitial tissue spaces or body cavities (e.g., due to increased hydrostatic pressure or decreased plasma osmotic pressure).</td>
-          </tr>
-          <tr>
-            <td><strong>Thrombosis</strong></td>
-            <td>The inappropriate formation of a solid mass (thrombus) from the constituents of blood within the intact cardiovascular system.</td>
-          </tr>
-          <tr>
-            <td><strong>Embolism</strong></td>
-            <td>A detached intravascular solid, liquid, or gaseous mass that is carried by the blood from its point of origin to a distant site, where it often causes tissue dysfunction or infarction.</td>
-          </tr>
-          <tr>
-            <td><strong>Infarction</strong></td>
-            <td>An area of ischemic necrosis caused by occlusion of either the arterial supply or the venous drainage.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="mini-quiz">
-      <h4>🧪 Topic 4.1 — Final Checkpoint Quiz</h4>
       <div class="quiz-q">
-        <div class="q-text">1. If a blood clot breaks off from a leg vein and travels to the lungs where it blocks a pulmonary artery, what is the traveling mass called?</div>
+        <div class="q-text">2. Drugs that mimic the "Fight or Flight" response, like epinephrine, belong to which class?</div>
         <div class="options">
-          <button class="opt" onclick="checkAnswer(this, false, 'A thrombus is a stationary clot attached to the vessel wall.')">A. A Thrombus</button>
-          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Once the mass detaches and travels through the bloodstream, it is called an embolus.')">B. An Embolus</button>
-          <button class="opt" onclick="checkAnswer(this, false, 'An infarct is the dead tissue resulting from the blockage, not the mass itself.')">C. An Infarct</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Anti-cholinergics block the parasympathetic system; they do not directly mimic the sympathetic system.')">A. Anti-cholinergic Agents</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Adrenergic agents stimulate the sympathetic nervous system.')">B. Adrenergic Agents</button>
         </div>
         <div class="q-feedback"></div>
       </div>
