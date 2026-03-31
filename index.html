@@ -347,15 +347,59 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 .q-feedback.fail{background:var(--rose-dim);color:var(--rose);border:1px solid rgba(244, 63, 94, 0.2);}
 
 /* ============================================================
-   RESPONSIVE
+   UI COMPONENTS (Timeline & Formula)
    ============================================================ */
+.formula-box { background:var(--bg3); padding:1.2rem; border-radius:8px; text-align:center; font-family:var(--mono); font-size: 1.1rem; margin: 0.8rem 0; border:1px solid var(--border2); color:var(--violet2); font-weight: 500;}
+.timeline { border-left: 2px solid var(--border2); margin: 1.5rem 0 0.5rem 1rem; padding-left: 1.5rem; position: relative; }
+.timeline-item { position: relative; margin-bottom: 1.5rem; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -1.86rem; top: 0.2rem; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--violet); border: 3px solid var(--bg); box-shadow: 0 0 0 1px var(--border2);
+}
+.timeline-title { font-weight: 600; color: var(--white); margin-bottom: 0.3rem; font-size: 0.95rem; }
+.timeline-desc { font-size: 0.9rem; color: var(--text2); line-height: 1.5; }
+
+/* ============================================================
+   RESPONSIVE & MOBILE
+   ============================================================ */
+.hamburger {
+  display:none; background:none; border:none; color:var(--text); cursor:pointer;
+  padding:0.4rem; margin-right: 0.6rem; border-radius: 6px; border: 1px solid transparent;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.hamburger:hover { background: var(--bg3); border-color: var(--border); }
+.overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
+  z-index:45; backdrop-filter:blur(4px); opacity:0; transition:opacity 0.3s ease;
+}
+.overlay.active { display:block; opacity:1; }
+
 @media (max-width: 768px) {
-  .sidebar{display:none}
-  .main{padding:0 1.5rem 5rem}
-  .topbar{padding:0.8rem 1.5rem;margin:0 -1.5rem;}
+  .hamburger { display:flex; align-items:center; justify-content:center; }
+  .sidebar {
+    display:flex; position:fixed; transform:translateX(-100%); transition:transform 0.3s ease;
+    width:280px; box-shadow:2px 0 10px rgba(0,0,0,0.8); z-index: 50;
+  }
+  .sidebar.active { transform:translateX(0); }
+  .main{padding:0 1.2rem 5rem}
+  .topbar{padding:0.7rem 1.2rem; margin:0 -1.2rem; width:calc(100% + 2.4rem);}
+  .topbar .tb-left { font-size: 11.5px; }
+  .tb-left span.d-none-mobile { display:none; }
   .hero{padding:3rem 0;}
   .hero h1{font-size:2.2rem}
-  .ch-header{padding:1.5rem;}
+  .ch-header{padding:1.5rem; margin: 3rem 0 2rem;}
+  .pbar { width: 80px; }
+  .box { padding: 1.2rem; }
+  .mini-quiz { padding: 1.5rem 1.2rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-stats { flex-direction: column; }
+  .stat-pill { width: 100%; justify-content: center; }
+  .topic-title { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+  .check-btn { margin-left: 0; width: 100%; border-radius: 8px; height: 40px; }
+  .top-btn-wrapper { width: 100%; }
 }
 </style>
 </head>
@@ -403,7 +447,12 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 <div class="main">
 
   <div class="topbar">
-    <div class="tb-left">💊 <strong>Course Title: Pharmacology</strong></div>
+    <div class="tb-left">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+      💊 <strong class="d-none-mobile" style="margin-left:6px;">Course Title: Pharmacology</strong>
+    </div>
     <div class="tb-right">
       <span id="topPct">0%</span>
       <div class="pbar"><div class="pbar-fill" id="topBar"></div></div>
@@ -438,6 +487,30 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <p>Pharmacology is the study of substances that interact with living systems through chemical processes. A <strong>drug</strong> is any chemical agent that affects living processes.</p>
 
     <div class="kp-box">
+      <div class="kp-head">Timeline — Drug Development Process</div>
+      <div class="kp-body">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-title">Phase 1: Discovery & Preclinical</div>
+            <div class="timeline-desc">Laboratory and animal model testing to assess safety, toxicity, and basic pharmacokinetics parameters.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-title">Phase 2: Clinical Trials</div>
+            <div class="timeline-desc">Testing in human volunteers and patients across 3 phases (Safety &rarr; Efficacy &rarr; Large scale comparison).</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-title">Phase 3: FDA / Regulatory Approval</div>
+            <div class="timeline-desc">Comprehensive review of all data. If therapeutic benefits outweigh targeted risks, the drug is approved for public use.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-title">Phase 4: Post-Market Surveillance</div>
+            <div class="timeline-desc">Ongoing continuous monitoring for rare adverse effects in the wider general population after release.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kp-box">
       <div class="kp-head">Sources of Drugs</div>
       <div class="kp-body">
         <div class="kp-row"><span class="num">1</span><span class="txt"><strong>Plant Sources:</strong> Alkaloids (e.g., morphine from opium, atropine from belladonna), glycosides (e.g., digoxin).</span></div>
@@ -467,6 +540,15 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <div class="box def">
       <div class="box-label">📖 Definition: Bioavailability</div>
       <p><strong>Bioavailability</strong> is the fraction (or percentage) of an administered drug that reaches the systemic circulation completely unchanged. An intravenous (IV) injection has 100% bioavailability, while an oral drug will have less than 100% due to incomplete absorption and first-pass metabolism in the liver.</p>
+    </div>
+
+    <div class="box exam">
+      <div class="box-label">🔴 Exam Alert — Bioavailability (F) Formula</div>
+      <p>High-yield exam concept! You may be asked to calculate or define the oral bioavailability percentage based on plasma drug curves:</p>
+      <div class="formula-box">
+        F = (AUC_oral / AUC_IV) &times; 100
+      </div>
+      <p><em>Note:</em> AUC stands for <strong>Area Under the Curve</strong>. The bioavailability of an IV injection is always exactly 100% (F = 1).</p>
     </div>
   </section>
 
@@ -502,6 +584,16 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="box exam">
+      <div class="box-label">🔴 Exam Alert — Efficacy vs. Potency</div>
+      <p>Differentiating these is extremely commonly tested!</p>
+      <ul class="bl">
+        <li><strong>Potency:</strong> The <em>amount</em> of drug required for an effect (tracked on the x-axis of a dose-response curve).</li>
+        <li><strong>Efficacy:</strong> The <em>maximum effect</em> a drug is physiologically capable of producing (tracked on the y-axis).</li>
+      </ul>
+      <p>Remember: Efficacy is clinically much more important than sheer potency.</p>
     </div>
 
     <div class="mini-quiz">
@@ -707,13 +799,30 @@ document.querySelectorAll('.nav-item[data-target]').forEach(item => {
   });
 });
 
-// Progress tracking
+// Progress and LocalStorage tracking
 const totalTopics = document.querySelectorAll('.topic').length;
 document.getElementById('totalCount').textContent = totalTopics;
 
+const storageKey = 'pharm101_progress';
+let savedProgress = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+function saveProgressToStorage() {
+  localStorage.setItem(storageKey, JSON.stringify(savedProgress));
+}
+
+// Check saved items on page load
+savedProgress.forEach(id => {
+  const btn = document.querySelector(`.topic[id="${id}"] .check-btn`);
+  if (btn) {
+    btn.classList.add('checked');
+    const navItem = document.querySelector(`.nav-item[data-target="${id}"]`);
+    if (navItem) navItem.classList.add('done');
+  }
+});
+
 function updateProgress() {
   const done = document.querySelectorAll('.check-btn.checked').length;
-  const pct = Math.round((done / totalTopics) * 100);
+  const pct = Math.round((done / totalTopics) * 100) || 0;
   document.getElementById('doneCount').textContent = done;
   document.getElementById('topPct').textContent = pct + '%';
   document.getElementById('topBar').style.width = pct + '%';
@@ -726,8 +835,18 @@ updateProgress();
 
 function toggleDone(btn, id) {
   btn.classList.toggle('checked');
+  const isChecked = btn.classList.contains('checked');
   const navItem = document.querySelector(`.nav-item[data-target="${id}"]`);
-  if (navItem) navItem.classList.toggle('done');
+  
+  if (isChecked) {
+    if (navItem) navItem.classList.add('done');
+    if (!savedProgress.includes(id)) savedProgress.push(id);
+  } else {
+    if (navItem) navItem.classList.remove('done');
+    savedProgress = savedProgress.filter(sid => sid !== id);
+  }
+  
+  saveProgressToStorage();
   updateProgress();
 }
 
@@ -739,6 +858,35 @@ function checkAnswer(btn, isCorrect, feedback) {
   fbDiv.textContent = (isCorrect ? '✅ ' : '❌ ') + feedback;
   fbDiv.className = 'q-feedback show ' + (isCorrect ? 'ok' : 'fail');
 }
+
+// Hamburger logic
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const sidebar = document.getElementById('sidebar');
+const shell = document.querySelector('.shell');
+
+const overlay = document.createElement('div');
+overlay.className = 'overlay';
+shell.appendChild(overlay);
+
+hamburgerBtn.addEventListener('click', () => {
+  sidebar.classList.add('active');
+  overlay.classList.add('active');
+});
+
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
+
+// Auto-close sidebar on mobile after navigating
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if(window.innerWidth <= 768) {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+  });
+});
 </script>
 </body>
 </html>
