@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pathology — Interactive Study Course</title>
+<style>
+/* ============================================================
+   FONTS
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS — Clinical Dark Theme
+   ============================================================ */
+:root {
+  --bg:         #0b0f19;
+  --bg2:        #111827;
+  --bg3:        #1f2937;
+  --panel:      #1e293b;
+  --border:     #334155;
+  --border2:    #475569;
+
+  --teal:       #2dd4bf; /* Clinical Teal */
+  --teal-dim:   rgba(45, 212, 191, 0.15);
+  
+  --crimson:    #fb7185; /* Blood/Stain Red */
+  --crimson-dim:rgba(251, 113, 133, 0.15);
+
+  --blue:       #60a5fa;
+  --blue-dim:   rgba(96, 165, 250, 0.15);
+
+  --amber:      #fbbf24;
+  --amber-dim:  rgba(251, 191, 36, 0.15);
+
+  --text:       #e2e8f0;
+  --text2:      #94a3b8;
+  --text3:      #64748b;
+  --white:      #f8fafc;
+
+  --serif:      'Crimson Pro', Georgia, serif;
+  --display:    'Space Grotesk', sans-serif;
+  --sans:       'Inter', system-ui, sans-serif;
+  --mono:       'Fira Code', monospace;
+
+  --radius:     10px;
+  --radius2:    16px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.8;overflow-x:hidden;}
+a{color:var(--teal);text-decoration:none}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:99px}
+
+/* ============================================================
+   LAYOUT SHELL
+   ============================================================ */
+.shell{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:290px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--border);
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  padding:0 0 3rem;display:flex;flex-direction:column;z-index:50;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+
+.sidebar-logo{
+  padding:1.5rem 1.4rem 1.2rem;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg, var(--teal-dim), transparent);
+  flex-shrink:0;
+}
+.sidebar-logo .badge{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--teal);background:var(--teal-dim);
+  padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:0.7rem;
+  border:1px solid rgba(45, 212, 191, 0.3);
+}
+.sidebar-logo h1{font-family:var(--display);font-size:1.1rem;font-weight:700;color:var(--white);line-height:1.3;}
+.sidebar-logo p{font-size:11.5px;color:var(--text3);margin-top:5px;}
+
+/* progress ring */
+.progress-ring-wrap{
+  padding:1.2rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:1rem;
+}
+.progress-ring-wrap svg{flex-shrink:0}
+.ring-track{fill:none;stroke:var(--border2);stroke-width:3}
+.ring-fill{
+  fill:none;stroke:var(--teal);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:125.66;stroke-dashoffset:125.66;
+  transform:rotate(-90deg);transform-origin:50% 50%;
+  transition:stroke-dashoffset 0.7s ease;
+}
+.ring-pct{font-family:var(--sans);font-size:10px;fill:var(--white);font-weight:700;text-anchor:middle;dominant-baseline:middle}
+.progress-ring-wrap .info .label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
+.progress-ring-wrap .info .count{font-size:1.05rem;font-weight:700;color:var(--white)}
+
+/* nav */
+.nav-section{padding:1rem 1.2rem 0.2rem}
+.nav-section-label{
+  font-size:10px;letter-spacing:1.5px;font-weight:600;
+  text-transform:uppercase;color:var(--text3);margin-bottom:0.6rem;
+  padding-left:0.3rem;
+}
+.nav-item{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.45rem 0.7rem;border-radius:7px;cursor:pointer;
+  font-size:13px;color:var(--text2);font-weight:500;
+  transition:all 0.2s;margin-bottom:3px;
+}
+.nav-item:hover{background:var(--bg3);color:var(--white)}
+.nav-item.active{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(45, 212, 191, 0.2);}
+.nav-item .dot{width:7px;height:7px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:all 0.2s;}
+.nav-item.done .dot{background:var(--blue)}
+.nav-item.active .dot{background:var(--teal);box-shadow:0 0 7px var(--teal)}
+
+/* ── MAIN ── */
+.main{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:0 3rem 8rem}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar{
+  position:sticky;top:0;
+  background:rgba(11,15,25,0.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);z-index:40;
+  padding:0.7rem 3rem;display:flex;align-items:center;
+  justify-content:space-between;font-size:12px;font-weight:500;
+  margin:0 -3rem;
+}
+.topbar .tb-left{color:var(--text3);display:flex;align-items:center;gap:0.5rem}
+.topbar .tb-left strong{color:var(--text2)}
+.topbar .tb-right{display:flex;align-items:center;gap:0.8rem;color:var(--text3)}
+.pbar{height:4px;background:var(--border);width:120px;border-radius:99px;overflow:hidden;}
+.pbar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:99px;width:0%;transition:width 0.4s ease;}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  padding:5rem 0 4rem;position:relative;
+}
+.hero::before{
+  content:'';position:absolute;top:0;left:-3rem;right:-3rem;height:3px;
+  background:linear-gradient(90deg,transparent,var(--crimson),var(--teal),var(--blue),transparent);
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--mono);font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--teal);margin-bottom:1.2rem;
+}
+.hero-eyebrow span{width:25px;height:1px;background:var(--teal);display:block;}
+.hero h1{
+  font-family:var(--display);font-size:clamp(2.5rem,5vw,4rem);
+  font-weight:700;line-height:1.1;color:var(--white);
+  margin-bottom:1.2rem;letter-spacing:-0.5px;
+}
+.hero h1 .accent{
+  background:linear-gradient(90deg,var(--teal),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-desc{font-size:1.15rem;color:var(--text2);max-width:650px;margin-bottom:2.5rem;line-height:1.7;}
+.hero-stats{display:flex;gap:1rem;flex-wrap:wrap;}
+.stat-pill{
+  display:flex;align-items:center;gap:0.5rem;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:0.5rem 1.2rem;
+  font-size:12.5px;color:var(--text2);font-weight:500;
+}
+.stat-pill strong{color:var(--white)}
+
+/* ============================================================
+   CHAPTER HEADERS
+   ============================================================ */
+.ch-header{
+  margin:4rem 0 2.5rem;padding:2.5rem;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius2);position:relative;overflow:hidden;
+}
+.ch-header::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--teal-dim),transparent 60%);
+  pointer-events:none;
+}
+.ch-header .ch-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--teal);margin-bottom:0.8rem;
+}
+.ch-header h2{
+  font-family:var(--display);font-size:2rem;font-weight:700;
+  color:var(--white);margin-bottom:0.6rem;
+}
+.ch-header .ch-desc{color:var(--text2);font-size:1rem;line-height:1.6;max-width:90%;}
+
+/* ============================================================
+   TOPIC
+   ============================================================ */
+.topic{
+  margin:3rem 0;opacity:0;transform:translateY(20px);
+  transition:opacity 0.6s ease,transform 0.6s ease;
+}
+.topic.visible{opacity:1;transform:none}
+.topic-title{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.topic-title h3{font-family:var(--display);font-size:1.4rem;font-weight:600;color:var(--white);}
+.marker{
+  width:38px;height:38px;border-radius:10px;background:var(--teal-dim);
+  border:1px solid rgba(45, 212, 191, 0.4);display:flex;align-items:center;
+  justify-content:center;font-size:16px;flex-shrink:0;
+}
+.marker.crimson { background:var(--crimson-dim); border-color:rgba(251, 113, 133, 0.4); }
+.marker.blue { background:var(--blue-dim); border-color:rgba(96, 165, 250, 0.4); }
+
+.check-btn{
+  margin-left:auto;width:30px;height:30px;border-radius:50%;
+  border:2px solid var(--border2);background:transparent;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  transition:all 0.2s;flex-shrink:0;color:transparent;
+}
+.check-btn:hover{border-color:var(--teal);background:var(--teal-dim)}
+.check-btn.checked{border-color:var(--teal);background:var(--teal);color:var(--bg)}
+
+p{margin-bottom:1.2rem;color:var(--text);font-size:1.05rem}
+
+/* ============================================================
+   BOXES
+   ============================================================ */
+.box{border-radius:var(--radius);padding:1.4rem 1.6rem;margin:1.6rem 0;border-left:4px solid;position:relative;background:var(--bg2);}
+.box .box-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.5rem;}
+.box p{margin:0 0 0.5rem;font-size:0.95rem;line-height:1.6;}
+.box p:last-child{margin-bottom:0}
+
+.box.def{border-color:var(--teal)}
+.box.def .box-label{color:var(--teal)}
+.box.eg{border-color:var(--blue)}
+.box.eg .box-label{color:var(--blue)}
+.box.exam{border-color:var(--crimson); background:var(--crimson-dim);}
+.box.exam .box-label{color:var(--crimson)}
+.box.note{border-color:var(--amber)}
+.box.note .box-label{color:var(--amber)}
+
+/* ============================================================
+   KEY POINTS
+   ============================================================ */
+.kp-box{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);margin:1.6rem 0;overflow:hidden;
+}
+.kp-head{
+  background:var(--bg3);padding:0.8rem 1.2rem;
+  font-size:10.5px;letter-spacing:1.5px;font-weight:600;
+  text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);
+}
+.kp-body{padding:1.2rem 1.5rem;}
+.kp-body .kp-row{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.03);
+  font-size:0.95rem;
+}
+.kp-body .kp-row:last-child{border-bottom:none}
+.kp-body .kp-row .num{
+  font-family:var(--mono);font-size:11px;color:var(--teal);
+  background:var(--teal-dim);padding:3px 8px;border-radius:4px;flex-shrink:0;margin-top:2px;
+}
+.kp-body .kp-row .txt{color:var(--text);line-height:1.6;}
+.kp-body .kp-row .txt strong{color:var(--white);font-weight:600;}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.tbl-wrap{overflow-x:auto;margin:1.6rem 0;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--bg2);}
+thead tr{background:var(--bg3)}
+thead th{
+  padding:0.9rem 1.2rem;font-size:11px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;color:var(--text2);
+  text-align:left;border-bottom:1px solid var(--border);
+}
+tbody td{
+  padding:0.9rem 1.2rem;font-size:0.95rem;border-bottom:1px solid var(--border);
+  vertical-align:top;color:var(--text);
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,0.02)}
+
+/* ============================================================
+   BULLET LIST
+   ============================================================ */
+.bl{list-style:none;padding:0;margin:1rem 0 1.2rem}
+.bl li{
+  padding:0.4rem 0 0.4rem 1.8rem;position:relative;
+  font-size:1rem;color:var(--text);
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.bl li:last-child{border-bottom:none}
+.bl li::before{
+  content:'■';color:var(--teal);font-size:9px;
+  position:absolute;left:2px;top:0.8rem;
+}
+
+/* ============================================================
+   QUIZ
+   ============================================================ */
+.mini-quiz{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius2);padding:2rem;margin-top:2.5rem;
+  position:relative;overflow:hidden;
+}
+.mini-quiz::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--teal),var(--blue),var(--teal));
+}
+.mini-quiz h4{
+  font-family:var(--display);font-size:1.2rem;color:var(--white);
+  margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;
+}
+.quiz-q{margin-bottom:2rem;}
+.quiz-q:last-child{margin-bottom:0;}
+.q-text{font-size:1.05rem;color:var(--white);margin-bottom:1rem;font-weight:500;line-height:1.5;}
+.options{display:flex;flex-direction:column;gap:0.6rem;}
+.opt{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:8px;padding:0.8rem 1.2rem;
+  font-size:0.95rem;color:var(--text);font-family:inherit;
+  cursor:pointer;text-align:left;transition:all 0.2s;
+}
+.opt:hover:not(:disabled){border-color:var(--teal);background:var(--teal-dim);}
+.opt.correct{border-color:var(--teal)!important;background:var(--teal-dim)!important;color:var(--teal)!important;}
+.opt.wrong{border-color:var(--crimson)!important;background:var(--crimson-dim)!important;color:var(--crimson)!important;}
+.opt:disabled{cursor:default;}
+.q-feedback{
+  font-size:0.9rem;margin-top:0.8rem;
+  padding:0.8rem 1rem;border-radius:8px;display:none;font-weight:500;
+}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(45, 212, 191, 0.2);}
+.q-feedback.fail{background:var(--crimson-dim);color:var(--crimson);border:1px solid rgba(251, 113, 133, 0.2);}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .sidebar{display:none}
+  .main{padding:0 1.5rem 5rem}
+  .topbar{padding:0.8rem 1.5rem;margin:0 -1.5rem;}
+  .hero{padding:3rem 0;}
+  .hero h1{font-size:2.2rem}
+  .ch-header{padding:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="badge">MED-PATH 201</div>
+    <h1>Pathology</h1>
+    <p>Term 2 · Theory & Practical Guide</p>
+  </div>
+
+  <div class="progress-ring-wrap">
+    <svg width="52" height="52" viewBox="0 0 52 52">
+      <circle class="ring-track" cx="26" cy="26" r="20"/>
+      <circle class="ring-fill" id="ringFill" cx="26" cy="26" r="20"/>
+      <text class="ring-pct" id="ringPct" x="26" y="26">0%</text>
+    </svg>
+    <div class="info">
+      <div class="label">Course Progress</div>
+      <div class="count"><span id="doneCount">0</span> / <span id="totalCount">0</span> topics</div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">1. Fundamentals</div>
+    <div class="nav-item" data-target="t1-1"><div class="dot"></div>Intro & Core Pathology</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">2. Cellular Responses</div>
+    <div class="nav-item" data-target="t2-1"><div class="dot"></div>Cellular Adaptations</div>
+    <div class="nav-item" data-target="t2-2"><div class="dot"></div>Necrosis & Gangrene</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">3. Inflammation & Repair</div>
+    <div class="nav-item" data-target="t3-1"><div class="dot"></div>Acute & Chronic Inflam.</div>
+    <div class="nav-item" data-target="t3-2"><div class="dot"></div>Wound Healing</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">4. Hemodynamics</div>
+    <div class="nav-item" data-target="t4-1"><div class="dot"></div>Edema & Embolism</div>
+  </div>
+</aside>
+
+<div class="main">
+
+  <div class="topbar">
+    <div class="tb-left">🔬 <strong>Pathology</strong> — Interactive Study Guide</div>
+    <div class="tb-right">
+      <span id="topPct">0%</span>
+      <div class="pbar"><div class="pbar-fill" id="topBar"></div></div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-eyebrow"><span></span>Based on Term 2 Syllabus<span></span></div>
+    <h1>The Foundation of <br><span class="accent">Medical Disease</span></h1>
+    <p class="hero-desc">Master the structural and functional changes in cells, tissues, and organs that underlie disease. This guide covers the core concepts, from cellular injury to hemodynamics, designed for 2nd Term Pathology students.</p>
+    <div class="hero-stats">
+      <div class="stat-pill">📘 <strong>4</strong>&nbsp;Core Chapters</div>
+      <div class="stat-pill">📝 <strong>6</strong>&nbsp;Study Topics</div>
+      <div class="stat-pill">🧪 <strong>Self-Assessment</strong>&nbsp;Quizzes</div>
+      <div class="stat-pill">⏱️ <strong>80+40</strong>&nbsp;Course Hrs Equivalent</div>
+    </div>
+  </header>
+
+  <div class="ch-header">
+    <div class="ch-num">Chapter 1 of 4</div>
+    <h2>Fundamentals of Pathology</h2>
+    <p class="ch-desc">Pathology is the scientific study of disease. Learn the terminology and the four core aspects that define the disease process.</p>
+  </div>
+
+  <section class="topic" id="t1-1">
+    <div class="topic-title">
+      <div class="marker">🔬</div>
+      <h3>Topic 1.1: Introduction & The Core of Pathology</h3>
+      <button class="check-btn" onclick="toggleDone(this,'t1-1')">✓</button>
+    </div>
+
+    <p>Pathology (from Greek *pathos* = suffering, and *logos* = study) bridges clinical practice and basic science. It involves the investigation of the causes, mechanisms, and effects of disease.</p>
+
+    <div class="kp-box">
+      <div class="kp-head">The Four Core Aspects of Pathology</div>
+      <div class="kp-body">
+        <div class="kp-row"><span class="num">1</span><span class="txt"><strong>Etiology (Cause):</strong> Why a disease arises. Can be genetic (e.g., mutations) or acquired (e.g., infectious, nutritional, chemical).</span></div>
+        <div class="kp-row"><span class="num">2</span><span class="txt"><strong>Pathogenesis (Mechanism):</strong> The sequence of events from the initial stimulus to the ultimate expression of the disease. *How* the disease develops.</span></div>
+        <div class="kp-row"><span class="num">3</span><span class="txt"><strong>Morphologic Changes:</strong> The structural alterations in cells or tissues that are characteristic of the disease or diagnostic of the etiologic process.</span></div>
+        <div class="kp-row"><span class="num">4</span><span class="txt"><strong>Clinical Significance:</strong> The functional consequences of morphologic changes. This leads to the clinical manifestations (signs and symptoms) observed in the patient.</span></div>
+      </div>
+    </div>
+
+    <div class="box def">
+      <div class="box-label">📖 Terminology: Cytology vs. Biopsy</div>
+      <p><strong>Cytology:</strong> The examination of individual cells or clusters of cells (e.g., Pap smear) to detect abnormalities. <br>
+      <strong>Biopsy:</strong> The removal and examination of a small piece of living tissue for diagnostic purposes.</p>
+    </div>
+
+    <div class="mini-quiz">
+      <h4>🧪 Topic 1.1 — Checkpoint Quiz</h4>
+      <div class="quiz-q">
+        <div class="q-text">1. Which core aspect of pathology refers to the *sequence of events* that occur after the initial injury?</div>
+        <div class="options">
+          <button class="opt" onclick="checkAnswer(this, false, 'Etiology refers to the underlying cause (the \'why\').')">A. Etiology</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Pathogenesis describes the step-by-step mechanism of disease development.')">B. Pathogenesis</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Morphology refers to structural changes, not the mechanism.')">C. Morphologic changes</button>
+        </div>
+        <div class="q-feedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ch-header">
+    <div class="ch-num">Chapter 2 of 4</div>
+    <h2>Cell Injury & Cellular Responses</h2>
+    <p class="ch-desc">How cells adapt to stress, what happens when they fail to adapt (injury), and the ultimate outcome of irreversible injury (necrosis and gangrene).</p>
+  </div>
+
+  <section class="topic" id="t2-1">
+    <div class="topic-title">
+      <div class="marker blue">🧬</div>
+      <h3>Topic 2.1: Cellular Adaptations</h3>
+      <button class="check-btn" onclick="toggleDone(this,'t2-1')">✓</button>
+    </div>
+
+    <p>Cells constantly adjust their structure and function to accommodate changing demands. These reversible changes are called **cellular adaptations**.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Adaptation Type</th>
+            <th>Definition</th>
+            <th>Clinical Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Hyperplasia</strong></td>
+            <td>Increase in the <em>number</em> of cells in an organ or tissue.</td>
+            <td>Thickening of skin due to chronic friction (callus); hormonal breast growth.</td>
+          </tr>
+          <tr>
+            <td><strong>Hypertrophy</strong></td>
+            <td>Increase in the <em>size</em> of individual cells, resulting in increased organ size.</td>
+            <td>Skeletal muscle enlargement in bodybuilders; left ventricular hypertrophy in hypertension.</td>
+          </tr>
+          <tr>
+            <td><strong>Atrophy</strong></td>
+            <td>Decrease in cell size and organ size due to loss of cell substance.</td>
+            <td>Muscle wasting due to a broken limb in a cast (disuse atrophy).</td>
+          </tr>
+          <tr>
+            <td><strong>Metaplasia</strong></td>
+            <td>Reversible replacement of one adult cell type by another adult cell type better able to withstand stress.</td>
+            <td>Squamous metaplasia in the respiratory tract of chronic smokers.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="topic" id="t2-2">
+    <div class="topic-title">
+      <div class="marker crimson">☠️</div>
+      <h3>Topic 2.2: Necrosis & Gangrene</h3>
+      <button class="check-btn" onclick="toggleDone(this,'t2-2')">✓</button>
+    </div>
+
+    <p>If the stress is too severe, cells suffer irreversible injury leading to cell death. <strong>Necrosis</strong> is the pathological form of cell death characterized by severe membrane damage, lysosomal enzyme leakage, and local inflammation.</p>
+
+    <div class="box exam">
+      <div class="box-label">🔴 Exam Alert — Gangrene Types</div>
+      <p><strong>Gangrene</strong> is not a specific pattern of cell death, but a clinical term often applied to a limb that has lost its blood supply and undergone necrosis.<br><br>
+      • <strong>Dry Gangrene:</strong> Coagulative necrosis due to ischemia (e.g., frostbite). Tissue is dry, black, and shriveled.<br>
+      • <strong>Wet Gangrene:</strong> Occurs when bacterial infection supervenes on necrotic tissue. Liquefactive necrosis makes it swollen, foul-smelling, and moist.<br>
+      • <strong>Gas Gangrene:</strong> Caused by *Clostridium perfringens* bacteria emitting gas into the tissues.</p>
+    </div>
+
+    <div class="mini-quiz">
+      <h4>🧪 Topic 2 — Checkpoint Quiz</h4>
+      <div class="quiz-q">
+        <div class="q-text">1. A chronic smoker's respiratory tract undergoes a change where normal columnar ciliated epithelium is replaced by stratified squamous epithelium. What is this process called?</div>
+        <div class="options">
+          <button class="opt" onclick="checkAnswer(this, false, 'Hyperplasia is an increase in the number of cells, not a change in cell type.')">A. Hyperplasia</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Metaplasia is the reversible change of one adult cell type to another.')">B. Metaplasia</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Hypertrophy is an increase in cell size.')">C. Hypertrophy</button>
+        </div>
+        <div class="q-feedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ch-header">
+    <div class="ch-num">Chapter 3 of 4</div>
+    <h2>Inflammation & Repair</h2>
+    <p class="ch-desc">The body's protective response to eliminate the initial cause of injury and the subsequent process of tissue healing.</p>
+  </div>
+
+  <section class="topic" id="t3-1">
+    <div class="topic-title">
+      <div class="marker crimson">🔥</div>
+      <h3>Topic 3.1: Acute vs. Chronic Inflammation</h3>
+      <button class="check-btn" onclick="toggleDone(this,'t3-1')">✓</button>
+    </div>
+
+    <p><strong>Inflammation</strong> is a vital response of vascularized tissues that delivers leukocytes and molecules of host defense from the circulation to the sites of infection and cell damage.</p>
+
+    <div class="kp-box">
+      <div class="kp-head">Comparison: Acute vs. Chronic</div>
+      <div class="kp-body">
+        <div class="kp-row"><span class="num">Duration</span><span class="txt"><strong>Acute:</strong> Fast (minutes to days). <br><strong>Chronic:</strong> Slow (days to years).</span></div>
+        <div class="kp-row"><span class="num">Cellular Infiltrate</span><span class="txt"><strong>Acute:</strong> Mainly Neutrophils. <br><strong>Chronic:</strong> Monocytes/Macrophages and Lymphocytes.</span></div>
+        <div class="kp-row"><span class="num">Tissue Injury</span><span class="txt"><strong>Acute:</strong> Usually mild and self-limited. <br><strong>Chronic:</strong> Often severe and progressive.</span></div>
+        <div class="kp-row"><span class="num">Local/Systemic Signs</span><span class="txt"><strong>Acute:</strong> Prominent clinical signs (Heat, Redness, Swelling, Pain, Loss of function). <br><strong>Chronic:</strong> Less prominent.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="topic" id="t3-2">
+    <div class="topic-title">
+      <div class="marker teal">🩹</div>
+      <h3>Topic 3.2: Healing by First vs. Second Intention</h3>
+      <button class="check-btn" onclick="toggleDone(this,'t3-2')">✓</button>
+    </div>
+
+    <p>Repair restores tissue architecture and function. It occurs via two main pathways depending on the severity of the wound.</p>
+
+    <ul class="bl">
+      <li><strong>Healing by First Intention (Primary Union):</strong> Occurs in clean, uninfected surgical incisions approximated by sutures. There is minimal tissue loss, rapid epithelialization, and very little scar formation.</li>
+      <li><strong>Healing by Second Intention (Secondary Union):</strong> Occurs in large wounds with extensive tissue loss (e.g., ulcers, abscesses). The edges cannot be brought together. Healing involves intense inflammation, abundant granulation tissue formation, wound contraction, and substantial scarring.</li>
+    </ul>
+
+    <div class="box note">
+      <div class="box-label">💡 Factors Affecting Wound Healing</div>
+      <p>Healing can be impaired by <strong>Local factors</strong> (infection, foreign bodies, poor blood supply to the area) or <strong>Systemic factors</strong> (diabetes, poor nutrition/Vitamin C deficiency, immunosuppression, age).</p>
+    </div>
+
+    <div class="mini-quiz">
+      <h4>🧪 Topic 3 — Checkpoint Quiz</h4>
+      <div class="quiz-q">
+        <div class="q-text">1. Which primary cell type is the hallmark of Acute Inflammation?</div>
+        <div class="options">
+          <button class="opt" onclick="checkAnswer(this, false, 'Macrophages are characteristic of chronic inflammation.')">A. Macrophages</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Neutrophils are the first responders in acute inflammation.')">B. Neutrophils</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'Lymphocytes are associated with chronic inflammation and specific immunity.')">C. Lymphocytes</button>
+        </div>
+        <div class="q-feedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ch-header">
+    <div class="ch-num">Chapter 4 of 4</div>
+    <h2>Hemodynamic Disorders</h2>
+    <p class="ch-desc">Disorders involving disruptions to normal blood flow, fluid balance, and blood coagulation.</p>
+  </div>
+
+  <section class="topic" id="t4-1">
+    <div class="topic-title">
+      <div class="marker blue">🩸</div>
+      <h3>Topic 4.1: Edema, Thrombosis & Embolism</h3>
+      <button class="check-btn" onclick="toggleDone(this,'t4-1')">✓</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Condition</th>
+            <th>Pathological Definition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Edema</strong></td>
+            <td>The accumulation of abnormal amounts of fluid in the interstitial tissue spaces or body cavities (e.g., due to increased hydrostatic pressure or decreased plasma osmotic pressure).</td>
+          </tr>
+          <tr>
+            <td><strong>Thrombosis</strong></td>
+            <td>The inappropriate formation of a solid mass (thrombus) from the constituents of blood within the intact cardiovascular system.</td>
+          </tr>
+          <tr>
+            <td><strong>Embolism</strong></td>
+            <td>A detached intravascular solid, liquid, or gaseous mass that is carried by the blood from its point of origin to a distant site, where it often causes tissue dysfunction or infarction.</td>
+          </tr>
+          <tr>
+            <td><strong>Infarction</strong></td>
+            <td>An area of ischemic necrosis caused by occlusion of either the arterial supply or the venous drainage.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mini-quiz">
+      <h4>🧪 Topic 4.1 — Final Checkpoint Quiz</h4>
+      <div class="quiz-q">
+        <div class="q-text">1. If a blood clot breaks off from a leg vein and travels to the lungs where it blocks a pulmonary artery, what is the traveling mass called?</div>
+        <div class="options">
+          <button class="opt" onclick="checkAnswer(this, false, 'A thrombus is a stationary clot attached to the vessel wall.')">A. A Thrombus</button>
+          <button class="opt" onclick="checkAnswer(this, true, 'Correct! Once the mass detaches and travels through the bloodstream, it is called an embolus.')">B. An Embolus</button>
+          <button class="opt" onclick="checkAnswer(this, false, 'An infarct is the dead tissue resulting from the blockage, not the mass itself.')">C. An Infarct</button>
+        </div>
+        <div class="q-feedback"></div>
+      </div>
+    </div>
+  </section>
+
+</div></div>
+
+<script>
+// Intersection Observer for topic reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      const id = e.target.id;
+      document.querySelectorAll(`.nav-item[data-target="${id}"]`).forEach(n => {
+        document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+        n.classList.add('active');
+      });
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.topic').forEach(t => observer.observe(t));
+
+// Nav click scroll
+document.querySelectorAll('.nav-item[data-target]').forEach(item => {
+  item.addEventListener('click', () => {
+    const target = document.getElementById(item.dataset.target);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Progress tracking
+const totalTopics = document.querySelectorAll('.topic').length;
+document.getElementById('totalCount').textContent = totalTopics;
+
+function updateProgress() {
+  const done = document.querySelectorAll('.check-btn.checked').length;
+  const pct = Math.round((done / totalTopics) * 100);
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('topPct').textContent = pct + '%';
+  document.getElementById('topBar').style.width = pct + '%';
+  const circumference = 2 * Math.PI * 20;
+  const offset = circumference - (pct / 100) * circumference;
+  document.getElementById('ringFill').style.strokeDashoffset = offset;
+  document.getElementById('ringPct').textContent = pct + '%';
+}
+updateProgress();
+
+function toggleDone(btn, id) {
+  btn.classList.toggle('checked');
+  const navItem = document.querySelector(`.nav-item[data-target="${id}"]`);
+  if (navItem) navItem.classList.toggle('done');
+  updateProgress();
+}
+
+function checkAnswer(btn, isCorrect, feedback) {
+  const options = btn.parentElement.querySelectorAll('.opt');
+  options.forEach(opt => opt.disabled = true);
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  const fbDiv = btn.parentElement.nextElementSibling;
+  fbDiv.textContent = (isCorrect ? '✅ ' : '❌ ') + feedback;
+  fbDiv.className = 'q-feedback show ' + (isCorrect ? 'ok' : 'fail');
+}
+</script>
+</body>
+</html>
